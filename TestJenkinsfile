@@ -1,0 +1,25 @@
+#!/usr/bin/env groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Deliver to Prod Repository') {
+            when {
+                // 조건문 (예: 브랜치, 환경 변수, 파라미터 등)
+                expression { params.ENV == 'prod' }
+            }
+            steps {
+                script {
+                    docker.withRegistry("", DOCKERHUB_CREDENTIAL) {
+                        docker.image("${DOCKER_IMAGE_NAME}").push()
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success { slackSend channel: '#deploy', message: 'Success!' }
+        failure { mail to: 'team@example.com', subject: 'Pipeline Failed!' }
+    }
+}
