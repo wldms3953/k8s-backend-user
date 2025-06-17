@@ -17,3 +17,6 @@ spring:
     generate-ddl: true
     show-sql: true
     open-in-view: false
+
+  kafka:
+    bootstrap-servers: 192.168.0.46:9092

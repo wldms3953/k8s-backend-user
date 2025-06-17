@@ -5,6 +5,7 @@ spring:
   kafka:
     listener:
       ack-mode: manual_immediate
+
     consumer:
       group-id: ${spring.application.name}
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -15,6 +16,7 @@ spring:
       properties:
         spring.json.trusted.packages: "*"
         spring.json.use.type.headers: false  # 헤더의 타입 정보 무시
+
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

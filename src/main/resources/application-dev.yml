@@ -17,3 +17,6 @@ spring:
     generate-ddl: true
     show-sql: true
     open-in-view: false
+
+    kafka:
+      bootstrap-servers: k8s-external-kafka-service:9092
