@@ -14,7 +14,20 @@ spec:
     spec:
       containers:
         - name: k8s-backend-user
-          image: zhiyin22/k8s-backend-user:0.0.2
+          image: zhiyin22/k8s-backend-user:0.0.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+
+          volumeMounts:
+            - mountPath: /etc/config
+              name: backend-user-config-volume
+      volumes:  #  컨테이너와 같은 레벨이어야 함
+        - name: backend-user-config-volume
+          configMap:
+            name: backend-user-config
+            items:
+              - key: application-dev.yml
+                path: application-dev.yml
+
+
