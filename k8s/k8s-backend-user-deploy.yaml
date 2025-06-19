@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: k8s-backend-user-deployment
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -14,28 +15,30 @@ spec:
     spec:
       containers:
         - name: k8s-backend-user
-          image: zhiyin22/k8s-backend-user:0.0.5
+          image: zhiyin22/k8s-backend-user:0.0.6
           imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: dev
-            - name: server.port
-              valueFrom:
-                configMapKeyRef:
-                  name: backend-us
-                  key: server.port
-          ports:
-            - containerPort: 8080
-
           volumeMounts:
-            - mountPath: /etc/config
-              name: backend-user-config-volume
-      volumes:  #  컨테이너와 같은 레벨이어야 함
+            - name: backend-user-config-volume
+              mountPath: /etc/config
+              readOnly: true
+            - name: backend-user-secret-volume
+              mountPath: /etc/secret
+              readOnly: true
+      volumes:
         - name: backend-user-config-volume
           configMap:
             name: backend-user-config
             items:
               - key: application-dev.yml
                 path: application-dev.yml
-
-
+        - name: backend-user-secret-volume
+          secret:
+            secretName: backend-user-secret
+            items:
+              - key: application-secret.yml
+                path: application-secret.yml
